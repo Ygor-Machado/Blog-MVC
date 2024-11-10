@@ -30,6 +30,15 @@ class Model
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public function findBy(string $field, $value)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$field} = :value LIMIT 1");
+        $stmt->bindParam(':value', $value);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     public function create(array $data)
     {
         $columns = implode(',', array_keys($data));
