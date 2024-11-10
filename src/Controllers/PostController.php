@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Core\Request;
 use App\Models\Post;
+
 
 class PostController extends Controller
 {
