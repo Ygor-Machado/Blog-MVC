@@ -17,31 +17,29 @@ class PostService
         $this->request = new Request();
     }
 
-    public function createPost(array $data, $file): bool
+    public function createPost(array $data): bool
     {
-        if(isset($_FILES['image']) && $file['image']['error'] === 0) {
+        if (isset($data['image']) && $data['image']['error'] === 0) {
             $uploadDir = __DIR__ . '/../public/uploads/';
 
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir);
             }
 
-            $imageTmpName = $_FILES['image']['tmp_name'];
-            $imageExt = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $imageTmpName = $data['image']['tmp_name'];
+            $imageExt = pathinfo($data['image']['name'], PATHINFO_EXTENSION);
 
             $imageHash = md5(uniqid(rand(), true) . file_get_contents($imageTmpName)) . '.' . $imageExt;
-
             $imagePath = $uploadDir . $imageHash;
 
-            if(move_uploaded_file($imageTmpName, $imagePath)) {
-
+            if (move_uploaded_file($imageTmpName, $imagePath)) {
                 $data['image'] = $imageHash;
-
-                return $this->post->create($data);
+            } else {
+                return false;
             }
         }
 
-        return false;
+        return $this->post->create($data);
     }
 
 

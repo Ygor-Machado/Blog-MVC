@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Request;
 use App\Models\Post;
+use App\Services\AuthService;
 use App\Services\PostService;
 
 
@@ -13,12 +14,14 @@ class PostController extends Controller
     protected $post;
     protected $request;
     protected $postService;
+    protected $authService;
 
     public function __construct()
     {
         $this->post = new Post();
         $this->request = new Request();
         $this->postService = new PostService();
+        $this->authService = new AuthService();
     }
 
     public function index(): void
@@ -45,13 +48,20 @@ class PostController extends Controller
 
     public function store()
     {
-        $data = [
-          'title' => $this->request->input('title'),
-          'content' => $this->request->input('content'),
-          'user_id' => $this->request->input('user_id')
-        ];
 
-        if ($this->postService->createPost($data, $_FILES)) {
+        if ($this->authService->checked()) {
+            $user = $this->authService->user();
+            $userId = $user->id;
+
+            $data = [
+                'title' => $this->request->input('title'),
+                'content' => $this->request->input('content'),
+                'user_id' => $userId,
+                'image' => $_FILES['image']
+            ];
+        }
+
+        if ($this->postService->createPost($data)) {
             header('Location: /posts/create');
         } else {
             echo "Erro ao criar post.";
