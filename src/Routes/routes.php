@@ -6,6 +6,7 @@ use App\Controllers\PostController;
 
 Route::get('/', [PostController::class, 'index']);
 Route::get('/posts/{id}', [PostController::class, 'show']);
+Route::post('/posts', [PostController::class, 'store']);
 
 Route::get('/login', [AuthController::class, 'viewLogin']);
 Route::get('/register', [AuthController::class, 'viewRegister']);
