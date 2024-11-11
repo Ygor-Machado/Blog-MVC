@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Posts</title>
-</head>
-<body>
-<h1>Posts</h1>
+<h2 class="h4 mb-4">Lista de Posts</h2>
 
 <?php if (!empty($posts)): ?>
-    <ul>
+    <ul class="list-group">
         <?php foreach ($posts as $post): ?>
-            <li>
-                <h2><?= $post->title; ?></h2>
-                <p><?= $post->content; ?></p>
+            <li class="list-group-item">
+                <h3 class="h5">
+                    <a href="/posts/<?= $post->id; ?>" class="text-decoration-none"><?= $post->title ?></a>
+                </h3>
+                <p><?= $post->content ?>...</p>
             </li>
         <?php endforeach; ?>
     </ul>
 <?php else: ?>
-    <p>Nenhum post encontrado.</p>
+    <p class="text-muted">Nenhum post encontrado.</p>
 <?php endif; ?>
-</body>
-</html>

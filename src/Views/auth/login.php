@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <title>Login</title>
-    </head>
-    <body>
-        <h1>Login</h1>
+<h1 class="h4 mb-4">Login</h1>
 
-        <?php if (!empty($error)): ?>
-            <p style="color:red;"><?= $error ?></p>
-        <?php endif; ?>
+<?php if (!empty($error)): ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+<?php endif; ?>
 
-        <form action="/login" method="POST">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Senha" required>
-            <button type="submit">Login</button>
-        </form>
-    </body>
-</html>
+<form action="/login" method="POST" class="mb-4">
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Senha</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Senha" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
