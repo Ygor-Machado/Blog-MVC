@@ -10,11 +10,13 @@ class PostService
 
     protected $post;
     protected $request;
+    protected $authService;
 
     public function __construct()
     {
         $this->post = new Post();
         $this->request = new Request();
+        $this->authService = new AuthService();
     }
 
     public function createPost(array $data): bool
@@ -42,5 +44,22 @@ class PostService
         return $this->post->create($data);
     }
 
+    public function deletePost($postId): bool
+    {
+        $post = $this->post->find($postId);
+
+        if ($post) {
+            if (!empty($post->image)) {
+                $imagePath = __DIR__ . '/../public/uploads/' . $post->image;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            return $this->post->delete($postId);
+        }
+
+        return false;
+    }
 
 }

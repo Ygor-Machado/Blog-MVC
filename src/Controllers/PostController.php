@@ -52,6 +52,11 @@ class PostController extends Controller
         $this->render('posts/create', [], 'dashboard_layout');
     }
 
+    public function edit()
+    {
+
+    }
+
     public function store()
     {
 
@@ -68,9 +73,11 @@ class PostController extends Controller
         }
 
         if ($this->postService->createPost($data)) {
-            header('Location: /posts/create');
+            header('Location: /posts/user');
+            $_SESSION['success'] = "Post criado com sucesso.";
+            exit;
         } else {
-            echo "Erro ao criar post.";
+            $_SESSION['error'] = "Erro ao criar o post";
         }
     }
 
@@ -86,6 +93,32 @@ class PostController extends Controller
 
         $posts = $this->post->getPostsByUserId($userId);
 
-        $this->render('posts/usersPosts', ['posts' => $posts]);
+        $this->render('posts/usersPosts', ['posts' => $posts], 'dashboard_layout');
+    }
+
+    public function destroy($data): void
+    {
+        if (!$this->authService->checked()) {
+            header("Location: /login");
+            exit;
+        }
+
+        $user = $this->authService->user();
+        $userId = $user->id;
+
+        $postId = (int)$data['id'];
+        $post = $this->post->find($postId);
+
+        if ($post && $post->user_id == $userId) {
+            if ($this->postService->deletePost($postId)) {
+                header('Location: /posts/user');
+                $_SESSION['success'] = "Deletado com sucesso.";
+                exit;
+            } else {
+                $_SESSION['error'] = "Erro ao deletar o post.";
+            }
+        } else {
+            $_SESSION['error'] = "Você não tem permissão para deletar este post.";
+        }
     }
 }

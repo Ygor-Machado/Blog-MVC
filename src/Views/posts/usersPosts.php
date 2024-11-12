@@ -1,3 +1,17 @@
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success">
+        <?= $_SESSION['success'] ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['error'] ?>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <h2 class="mb-4">Meus Posts</h2>
 
 <?php if (!empty($posts)): ?>
@@ -14,6 +28,13 @@
                             <i class="bi bi-clock"></i> Criado em: <?= date('d/m/Y', strtotime($post->created_at)) ?>
                         </p>
                         <p class="card-text"><?= $post->content ?></p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="/posts/edit/<?= $post->id ?>" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="/posts/<?= $post->id ?>" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este post?');">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn btn-danger btn-sm">Deletar</button>
+                        </form>
                     </div>
                 </div>
             </div>
