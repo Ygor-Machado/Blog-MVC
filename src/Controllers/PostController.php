@@ -43,7 +43,13 @@ class PostController extends Controller
 
     public function create(): void
     {
-        $this->render('posts/create');
+
+        if (!$this->authService->checked()) {
+            header("Location: /login");
+            exit;
+        }
+
+        $this->render('posts/create', [], 'dashboard_layout');
     }
 
     public function store()
@@ -66,5 +72,20 @@ class PostController extends Controller
         } else {
             echo "Erro ao criar post.";
         }
+    }
+
+    public function usersPosts(): void
+    {
+        if (!$this->authService->checked()) {
+            header("Location: /login");
+            exit;
+        }
+
+        $user = $this->authService->user();
+        $userId = $user->id;
+
+        $posts = $this->post->getPostsByUserId($userId);
+
+        $this->render('posts/usersPosts', ['posts' => $posts]);
     }
 }

@@ -30,7 +30,7 @@ class AuthController extends Controller
     public function dashboard(): void
     {
         if ($this->authService->checked()) {
-            $this->render('auth/dashboard');
+            $this->render('auth/dashboard', [], 'dashboard_layout');
         } else {
             header("Location: /login");
             exit;
