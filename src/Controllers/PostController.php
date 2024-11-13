@@ -11,10 +11,10 @@ use App\Services\PostService;
 class PostController extends Controller
 {
 
-    protected $post;
-    protected $request;
-    protected $postService;
-    protected $authService;
+    private $post;
+    private $request;
+    private $postService;
+    private $authService;
 
     public function __construct()
     {
