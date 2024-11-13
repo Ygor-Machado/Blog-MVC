@@ -30,9 +30,9 @@ class PostController extends Controller
         $this->render('posts/index', ['posts' => $posts]);
     }
 
-    public function show($data): void
+    public function show($id): void
     {
-        $post = $this->post->find($data['id']);
+        $post = $this->post->find((int)$id);
 
         if ($post) {
             $this->render('posts/show', ['post' => $post]);
