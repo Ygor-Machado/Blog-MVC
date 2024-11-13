@@ -52,9 +52,24 @@ class PostController extends Controller
         $this->render('posts/create', [], 'dashboard_layout');
     }
 
-    public function edit()
+    public function edit($data)
     {
+        if (!$this->authService->checked()) {
+            header("Location: /login");
+            exit;
+        }
 
+        $user = $this->authService->user();
+        $postId = (int)$data['id'];
+        $post = $this->post->find($postId);
+
+        if ($post && $post->user_id == $user->id) {
+            $this->render('posts/edit', ['post' => $post], 'dashboard_layout');
+        } else {
+            $_SESSION['error'] = "Você não tem permissão para editar este post.";
+            header('Location: /posts/user');
+            exit;
+        }
     }
 
     public function store()
@@ -79,6 +94,40 @@ class PostController extends Controller
         } else {
             $_SESSION['error'] = "Erro ao criar o post";
         }
+    }
+
+    public function update($data)
+    {
+        if (!$this->authService->checked()) {
+            header("Location: /login");
+            exit;
+        }
+
+        $user = $this->authService->user();
+        $postId = (int)$data['id'];
+        $post = $this->post->find($postId);
+
+        if ($post && $post->user_id == $user->id) {
+            $data = [
+              'title' => $this->request->input('title'),
+              'content' => $this->request->input('content'),
+            ];
+
+            if (!empty($_FILES['image']['name'])) {
+                $data['image'] = $_FILES['image'];
+            }
+
+            if ($this->postService->updatePost($postId, $data)) {
+                $_SESSION['success'] = "Post atualizado com sucesso.";
+                header("Location: /posts/user");
+                exit;
+            } else {
+                $_SESSION['error'] = "Erro ao atualizar o post.";
+            }
+        } else {
+            $_SESSION['error'] = "Você não tem permissão para editar este post.";
+        }
+
     }
 
     public function usersPosts(): void
@@ -122,3 +171,4 @@ class PostController extends Controller
         }
     }
 }
+

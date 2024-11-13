@@ -65,5 +65,6 @@ class Route
     {
         http_response_code(404);
         echo "Rota não encontrada";
+        // Retornar alguma view de erro aqui, por enquanto deixa apenas o echo
     }
 }
